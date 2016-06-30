@@ -384,6 +384,12 @@ TABLE_CONFIG_OPTIONS = [
         'required': False,
         'type': 'float'
     },
+    {
+        'key': 'time_series_tables',
+        'option': 'time_series_table',
+        'required': False,
+        'type': 'str'
+    },
 
 ]
 

@@ -4,11 +4,11 @@ from boto.exception import JSONResponseError, BotoServerError
 
 from dynamic_dynamodb import calculators
 from dynamic_dynamodb.aws import dynamodb, sns
-from dynamic_dynamodb.core import circuit_breaker
-from dynamic_dynamodb.statistics import table as table_stats
-from dynamic_dynamodb.log_handler import LOGGER as logger
 from dynamic_dynamodb.config_handler import get_table_option, get_global_option
-
+from dynamic_dynamodb.core import circuit_breaker
+from dynamic_dynamodb.core.timeseriestable import is_time_series_in_future
+from dynamic_dynamodb.log_handler import LOGGER as logger
+from dynamic_dynamodb.statistics import table as table_stats
 
 def ensure_provisioning(
         table_name, key_name,
@@ -35,6 +35,10 @@ def ensure_provisioning(
 
     # Handle throughput alarm checks
     __ensure_provisioning_alarm(table_name, key_name)
+
+    if is_time_series_in_future(table_name, get_table_option('time_series_tables', 'time_series_tables').split(',')):
+        logger.info('Time series table ' + table_name + " is in the future, skipping provisioning")
+        return (0, 0)
 
     try:
         read_update_needed, updated_read_units, num_consec_read_checks = \
