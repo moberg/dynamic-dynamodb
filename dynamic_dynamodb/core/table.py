@@ -6,7 +6,7 @@ from dynamic_dynamodb import calculators
 from dynamic_dynamodb.aws import dynamodb, sns
 from dynamic_dynamodb.config_handler import get_table_option, get_global_option
 from dynamic_dynamodb.core import circuit_breaker
-from dynamic_dynamodb.core.timeseriestable import is_time_series_in_future
+from dynamic_dynamodb.core.timeseriestable import TimeSeriesTable
 from dynamic_dynamodb.log_handler import LOGGER as logger
 from dynamic_dynamodb.statistics import table as table_stats
 
@@ -36,7 +36,10 @@ def ensure_provisioning(
     # Handle throughput alarm checks
     __ensure_provisioning_alarm(table_name, key_name)
 
-    if is_time_series_in_future(table_name, get_table_option('time_series_tables', 'time_series_tables').split(',')):
+    ts = TimeSeriesTable(get_table_option('time_series_tables', 'time_series_tables'),
+                         get_table_option('time_series_tables_no_scale_period_in_seconds', 'time_series_tables_no_scale_period_in_seconds'))
+
+    if ts.is_in_future(table_name):
         logger.info('Time series table ' + table_name + " is in the future, skipping provisioning")
         return (0, 0)
 

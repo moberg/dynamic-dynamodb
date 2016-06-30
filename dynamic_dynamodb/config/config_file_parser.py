@@ -390,6 +390,12 @@ TABLE_CONFIG_OPTIONS = [
         'required': False,
         'type': 'str'
     },
+    {
+        'key': 'time_series_tables_no_scale_period_in_seconds',
+        'option': 'time_series_tables_no_scale_period_in_seconds',
+        'required': False,
+        'type': 'int'
+    },
 
 ]
 
