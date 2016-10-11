@@ -20,7 +20,7 @@ class TestTimeSeriesTable(unittest.TestCase):
         self.assertEqual(TimeSeriesTable.normalize_time(current_time, "prod_notifications_%Y-%m"), datetime(2016, 5, 1, 0, 0))
 
     def test_in_the_future3(self):
-        config = "t_:t_%Y-%m,t2:t2_%Y-%m"
+        config = "t_,t_%Y-%m|t2,t2_%Y-%m"
         current_time = datetime(2016, 5, 8)
         ts = TimeSeriesTable(config, current_time_provider = lambda: current_time)
 
@@ -38,7 +38,7 @@ class TestTimeSeriesTable(unittest.TestCase):
         self.assertEqual(False, ts.is_in_future("somethine_that_doest_match-01"))
 
     def test_in_the_future2(self):
-        config = "t_:t_%Y-%m-%d_%H"
+        config = "t_,t_%Y-%m-%d_%H"
         current_time = datetime(2016, 2, 1, 22, 15)
         ts = TimeSeriesTable(config, current_time_provider = lambda: current_time)
 
@@ -51,7 +51,7 @@ class TestTimeSeriesTable(unittest.TestCase):
         self.assertEqual(False, ts.is_in_future("somethine_that_doest_match-01"))
 
     def test_no_scale_period(self):
-        config = "t_:t_%Y-%m,t2:t2_%Y-%m"
+        config = "t_,t_%Y-%m|t2,t2_%Y-%m"
 
         self.ts_time_test(config, datetime(2016, 6, 30, 23, 59), "t_2016-07", True)
         self.ts_time_test(config, datetime(2016, 7, 1, 0, 0), "t_2016-07", True)

@@ -6,7 +6,7 @@ class TimeSeriesTable():
         self.no_scale_time_period = no_scale_time_period
         self.current_time_provider = current_time_provider
 
-        self.config = [t.split(":") for t in config.split(',')]
+        self.config = [t.split(",") for t in config.split('|')]
 
     def is_in_future(self, table):
         for (prefix, time_format) in self.config:
